@@ -1,0 +1,87 @@
+import random
+
+def choose_code():
+    random.randint(1,6)
+    nums = []
+    for i in range(4):
+        nums.append(random.randint(1,6))
+    return nums
+
+
+def gather_guess():
+    valid = False
+    guess_value = []
+    while not valid:
+        valid = True
+        guess = input("Input your four number guesses with a space: ")
+        guess_value = guess.split(" ")
+        if len(guess_value) == 4:
+            for value in guess_value:
+                for char in value:
+                    if ord(char) not in range(49, 55):
+                        valid = False
+                        break    
+                if not valid: 
+                    break
+        else:
+            valid = False
+        if not valid:
+            print("Error on input.")
+    for i in range(4):
+        guess_value[i] = int(guess_value[i])
+    return guess_value
+
+
+# black peg = b white peg = w
+
+def compare_codes(guess, code):
+    pegs = []
+    for i in range(len(guess)):
+        if guess[i] == code[i]:
+            pegs.append('b')
+            guess[i] = 'x'    
+    for i in range(len(guess)):        
+        if guess[i] != 'x' and guess[i] in code:
+            pegs.append('w')
+    return pegs
+
+
+def output_result(result):
+    print(result)
+
+def game_over(win):
+    if win:
+        print("Congrats! You won! :)")
+    else:
+        print("Sorry, you lost. :(")
+        print("The right numbers were {}".format(code))
+
+def did_I_win(result):
+    return result == ['b', 'b', 'b', 'b']
+    
+
+print("Welcome to the Mastermind game!")
+print()
+print("You have 10 chances to guess the four random integers.")
+print("Only choose from numbers 1 through 6.")
+print()
+print("If you recieve a 'b', one of your guesses is correct and in the correct spot.")
+print("If you recieve a 'w', one of your guesses is correct but in the wrong spot.")
+print()
+
+
+code = choose_code()
+
+turns = 0
+win = False
+while turns < 10:
+    guess = gather_guess()
+    print(guess)
+    result = compare_codes(guess, code)
+    output_result(result)
+    win = did_I_win(result)
+    if win:
+        break
+    turns += 1
+
+game_over(win) 
